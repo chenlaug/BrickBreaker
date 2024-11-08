@@ -1,0 +1,7 @@
+﻿################################################################################
+# Ce fichier .gitignore a été automatiquement créé par Microsoft(R) Visual Studio.
+################################################################################
+
+/BrickBreaker/x64
+/.vs/BrickBreaker
+/x64
