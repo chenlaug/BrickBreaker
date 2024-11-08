@@ -17,7 +17,7 @@ void Event::handleEvent()
 			break;
 
 		case sf::Event::KeyPressed:
-		{
+
 			switch (event.key.code) {
 			case sf::Keyboard::Escape:
 				window->close();
@@ -34,7 +34,8 @@ void Event::handleEvent()
 				break;
 
 			}
-		}
+
 
 		}
 	}
+}
