@@ -11,12 +11,14 @@ Window::Window(int width, int height, std::string title)
 
 Window::~Window()
 {
-	close();
+	if (window.isOpen())
+	{
+		window.close();
+	}
 }
 
-void Window::clear()
-{
-	window.clear();
+void Window::clear() {
+	window.clear(sf::Color::Black);
 }
 
 void Window::close()
@@ -34,14 +36,17 @@ bool Window::isOpen()
 	return window.isOpen();
 }
 
+bool Window::pollEvent(sf::Event& event) {
+	return window.pollEvent(event);
+}
+
 sf::Vector2u Window::getSize()
 {
 	return window.getSize();
 }
 
-bool Window::pollEvent()
-{
-	return window.pollEvent(event);
+sf::RenderWindow& Window::getRenderWindow() {
+	return window;
 }
 
 
