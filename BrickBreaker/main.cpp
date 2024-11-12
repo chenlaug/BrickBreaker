@@ -9,6 +9,8 @@ int main()
 	while (window.isOpen())
 	{
 		event.handleEvent();
+		window.display();
+		window.clear();
 	}
 
 	return 0;

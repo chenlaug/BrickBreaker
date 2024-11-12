@@ -7,6 +7,7 @@ private:
 	int height;
 	sf::RenderWindow window;
 	std::string title;
+	bool fullscreen = false;
 
 public:
 
@@ -16,10 +17,13 @@ public:
 	void clear();
 	void display();
 	void close();
+	void toggleFullscreen();
+	void reCreateWindow();
+	void setFullscreen();
+	void draw(sf::Drawable& drawable);
 	bool isOpen();
+	bool isFullscreen();
 	bool pollEvent(sf::Event&);
 	sf::Vector2u getSize();
 	sf::RenderWindow& getRenderWindow();
 };
-
-
