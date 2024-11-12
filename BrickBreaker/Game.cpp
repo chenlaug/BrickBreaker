@@ -4,7 +4,8 @@
 Game::Game() : window(800, 600, "Brick Breaker"), event(&window) {}
 
 // destructeur de la classe Game
-Game::~Game() {}
+Game::~Game() {
+}
 
 // Cette fonction est la boucle principale du jeu
 void Game::run()
