@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "Event.h"
+#include "FPSConter.h"
 
 class Game
 {
@@ -12,5 +13,6 @@ public:
 private:
 	Window window;
 	Event event;
+	FPSConter fpsConter;
 };
 

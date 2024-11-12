@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="ECSManager.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="FPSConter.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Window.cpp" />
@@ -144,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="ECSManager.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="FPSConter.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
