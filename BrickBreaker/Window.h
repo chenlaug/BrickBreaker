@@ -20,7 +20,7 @@ public:
 	void toggleFullscreen();
 	void reCreateWindow();
 	void setFullscreen();
-	void draw(sf::Drawable& drawable);
+	void draw(const sf::Drawable& drawable);
 	bool isOpen();
 	bool isFullscreen();
 	bool pollEvent(sf::Event&);

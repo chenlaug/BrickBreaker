@@ -95,7 +95,7 @@ void Window::setFullscreen()
 }
 
 // Cette fonction permet de dessiner un objet
-void Window::draw(sf::Drawable& drawable)
+void Window::draw(const sf::Drawable& drawable)
 {
 	window.draw(drawable);
 }
