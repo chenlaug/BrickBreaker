@@ -19,9 +19,10 @@ struct size
 
 struct color
 {
-	float red;
-	float green;
-	float blue;
+	int red;
+	int green;
+	int blue;
+	int alpha;
 };
 
 struct texture
