@@ -11,13 +11,13 @@ Game::~Game() {
 // Cette fonction est la boucle principale du jeu
 void Game::run()
 {
-	fpsConter.init();   
+	fpsConter.init();
 
 	while (window.isOpen())
 	{
 		fpsConter.getFps();
 		fpsConter.display();
-        
+
 		sf::CircleShape shape(50.f);
 		// change la couleur de la forme pour du vert
 		shape.setFillColor(sf::Color(100, 250, 50));
