@@ -1,8 +1,5 @@
 #include <iostream>
-#include "Window.h" 
-#include "Event.h"
-#include "Component.h"
-#include "ECSManager.h"
+#include "Game.h"
 
 int main()
 {
@@ -41,7 +38,8 @@ int main()
 
     }*/
    
-
+	Game game;
+	game.run();
 
 	return 0;
 }
