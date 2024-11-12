@@ -6,19 +6,31 @@
 
 int main()
 {
-	ECSManager ecsmanager;
-	position p;
-	p.posX = 10.0f;
-	p.posY = 10.0f;
-	ecsmanager.addComponent("Player", "Position", p);
-	color c;
-	c.red = 255.0f;
-	c.green = 255.0f;
-	c.blue = 0;
-	ecsmanager.addComponent("Player", "Color", c);
+    ECSManager ecs;
 
-	position p2 = ecsmanager.getComponent("Player", "Position");
-	
-	std::cout << "Position: " << ecsmanager.getComponent("Player", "Position") << std::endl;
+    EntityId entity = ecs.createEntity();
+	EntityId balle = ecs.createEntity();
+    std::cout << "Entite creee avec l'ID : " << entity << std::endl;
+    std::cout << "Entite creee avec l'ID : " << balle << std::endl;
+
+    ecs.addComponent<position>(entity, { 100.0f, 200.0f });
+    ecs.addComponent<velocity>(entity, { 0.5f, 1.0f });
+
+    if (ecs.hasComponent<position>(entity)) {
+        std::cout << "L'entite a un composant Position." << std::endl;
+    }
+
+    position* pos = ecs.getComponent<position>(entity);
+    if (pos) {
+        std::cout << "Position : (" << pos->posX << ", " << pos->posY << ")" << std::endl;
+    }
+
+    ecs.removeComponent<velocity>(entity);
+    if (!ecs.hasComponent<velocity>(entity)) {
+        std::cout << "Le composant Velocity a ete supprime." << std::endl;
+    }
+
+    ecs.destroyEntity(entity);
+    std::cout << "L'entite a ete supprimee." << std::endl;
 	return 0;
 }
