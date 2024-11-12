@@ -137,12 +137,14 @@
   <ItemGroup>
     <ClCompile Include="ECSManager.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ECSManager.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
