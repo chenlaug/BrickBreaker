@@ -6,7 +6,7 @@
 
 int main()
 {
-    try
+   /* try
     {
         ECSManager ecs;
 
@@ -22,7 +22,7 @@ int main()
 
         position* pos = ecs.getComponent<position>(entity);
         if (pos) {
-            std::cout << "Position : (" << pos->posX << ", " << pos->posY << ")" << std::endl;
+            std::cout << "Position : (" << pos->posX << " X " << pos->posY << ")" << std::endl;
         }
 
 
@@ -39,7 +39,9 @@ int main()
     {
         std::cerr << "Une erreur s'est produite : " << e.what() << std::endl;
 
-    }
+    }*/
    
+
+
 	return 0;
 }
