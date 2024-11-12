@@ -43,7 +43,7 @@ void Window::reCreateWindow()
 {
 	close();
 
-	if (this->fullscreen)
+	if (this->isfullscreen)
 	{
 		window.create(sf::VideoMode::getDesktopMode(), title, sf::Style::Fullscreen);
 	}
@@ -68,7 +68,7 @@ bool Window::isOpen()
 // Cette fonction permet de savoir si la fenêtre est en plein écran
 bool Window::isFullscreen()
 {
-	return this->fullscreen;
+	return this->isfullscreen;
 }
 
 // Cette fonction permet de gérer les événements de la fenêtre
@@ -91,7 +91,7 @@ sf::RenderWindow& Window::getRenderWindow() {
 // Cette fonction permet de mettre la fenêtre en plein écran
 void Window::setFullscreen()
 {
-	this->fullscreen = !fullscreen;
+	this->isfullscreen = !isfullscreen;
 }
 
 // Cette fonction permet de dessiner un objet

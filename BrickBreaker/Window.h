@@ -7,7 +7,7 @@ private:
 	int height;
 	sf::RenderWindow window;
 	std::string title;
-	bool fullscreen = false;
+	bool isfullscreen = false;
 
 public:
 
