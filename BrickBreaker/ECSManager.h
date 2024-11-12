@@ -34,7 +34,7 @@ public:
     void removeComponent(EntityId entity);
 };
 
-// Implémentation des méthodes template
+// ########## Implémentation des méthodes template ##########
 
 // Crée une nouvelle entité et retourne son ID
 template<typename Component>
@@ -84,3 +84,5 @@ inline void ECSManager::removeComponent(EntityId entity)
         it->second.erase(entity);
     }
 }
+
+// ####################
