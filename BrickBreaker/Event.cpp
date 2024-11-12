@@ -2,11 +2,13 @@
 #include <iostream>
 #include "Window.h"
 
+// Constructeur de la classe Event
 Event::Event(Window* window)
 {
 	this->window = window;
 }
 
+// Cette fonction permet de gérer les événements de la fenêtre
 void Event::handleEvent()
 {
 	while (window->pollEvent(event))
@@ -32,7 +34,11 @@ void Event::handleEvent()
 				std::cout << "Left" << std::endl;
 				// c'est ici qu'on vas rajouter la fonction pour bouger la raquette <-
 				break;
-
+			case sf::Keyboard::F:
+			case sf::Keyboard::F11:
+				// Mettre en plein écran ou en fenêtré selon l'état actuel de la fenêtre avec F ou F11
+				window->toggleFullscreen();
+				break;
 			}
 
 
