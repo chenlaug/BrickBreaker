@@ -1,31 +1,49 @@
 #include "Game.h"
+#include "Component.h"
 #include <iostream>
 
 // constructeur de la classe Game
-Game::Game() : window(800, 600, "Brick Breaker"), event(&window) {}
+Game::Game() : window(800, 600, "Brick Breaker"), event(&window), systeme(ecsManager) {}
 
 // destructeur de la classe Game
 Game::~Game() {
 }
 
-// Cette fonction est la boucle principale du jeu
-void Game::run()
+// Cette fonction initialise tout ce que le jeu a besoin pour fonctionner
+void Game::init()
 {
 	fpsConter.init();
+	systeme.createEntity();
 
-	while (window.isOpen())
-	{
-		fpsConter.getFps();
-		fpsConter.display();
+}
 
-		sf::CircleShape shape(50.f);
-		// change la couleur de la forme pour du vert
-		shape.setFillColor(sf::Color(100, 250, 50));
 
+void Game::run()
+{
+	init();
+	while (window.isOpen()) {
 		event.handleEvent();
 		window.clear();
-		window.draw(shape);
-		window.draw(fpsConter.getText());
+
+
+		// Rendu graphique des entités
+		for (auto e : ecsManager.getEntities()) {
+			// Récupérer les composants de l'entité
+			position* pos = ecsManager.getComponent<position>(e);
+			size* s = ecsManager.getComponent<size>(e);
+			color* c = ecsManager.getComponent<color>(e);
+
+			if (pos && s && c) { // Vérifie que tous les composants nécessaires sont présents
+				sf::RectangleShape rect;
+				rect.setSize(sf::Vector2f(s->width, s->height));     // Taille
+				rect.setPosition(pos->posX, pos->posY);              // Position
+				rect.setFillColor(sf::Color(c->red, c->green, c->blue, c->alpha)); // Couleur
+
+				window.draw(rect); // Dessiner le rectangle
+			}
+		}
+
+		// Afficher la fenêtre
 		window.display();
 	}
 }

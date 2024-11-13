@@ -1,11 +1,13 @@
 #include "ECSManager.h"
+#include <iostream>
 
 // Crée une nouvelle entité et retourne son ID
-EntityId ECSManager::createEntity()
-{
-    entities.push_back(nextEntityId);
-    return nextEntityId++;
+EntityId ECSManager::createEntity() {
+    EntityId newEntity = nextEntityId++;
+    entities.push_back(newEntity);
+    return newEntity;
 }
+
 
 // Supprime une entité et tous ses composants
 void ECSManager::destroyEntity(EntityId entity)
@@ -18,7 +20,7 @@ void ECSManager::destroyEntity(EntityId entity)
 }
 
 // Retourne la liste des entités
-const std::vector<EntityId>& ECSManager::getEntities() const
-{
+const std::vector<EntityId>& ECSManager::getEntities() const {
     return entities;
 }
+
