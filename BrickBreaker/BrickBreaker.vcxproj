@@ -140,6 +140,7 @@
     <ClCompile Include="FPSConter.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Systeme.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +148,7 @@
     <ClInclude Include="Event.h" />
     <ClInclude Include="FPSConter.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Systeme.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
