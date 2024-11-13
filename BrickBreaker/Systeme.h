@@ -1,5 +1,6 @@
 #pragma once
 #include "ECSManager.h"
+#include "Window.h"
 
 class Systeme
 {
