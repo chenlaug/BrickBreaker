@@ -2,8 +2,8 @@
 #include "Component.h"
 #include <iostream>
 
-Systeme::Systeme(ECSManager& manager) : ecsManager(manager) {}
-
+Systeme::Systeme(ECSManager& manager, Window& win)
+	: ecsManager(manager), window(win) {}
 
 Systeme::~Systeme()
 {
@@ -25,6 +25,33 @@ void Systeme::createEntity()
 	ecsManager.addComponent<size>(ball, { 20.0f, 20.0f });
 	ecsManager.addComponent<color>(ball, { 0, 255, 0, 255 });
 	// ecsManager->addComponent<texture>(ball, "ball.png");
+	float posX = 0;
+	float posY = 0;
+	float width = 50.0f;
+	float height = 20.0f;
+	for (int i = 0; i < 64; i++)
+	{
+		EntityId brick = ecsManager.createEntity();
+
+		if (window.getSize().x >= (posX + width))
+		{
+			posX += width;
+		}
+		else
+		{
+			posX = 0;
+			posY += height;
+		}
+
+		ecsManager.addComponent<position>(brick, { posX, posY });
+		ecsManager.addComponent<size>(brick, { width, height });
+
+		int red = rand() % 255;
+		int green = rand() % 255;
+		int blue = rand() % 255;
+		ecsManager.addComponent<color>(brick, { 0, 255, 0, 255 });
+		/*ecsManager->addComponent<texture>(brick, "brick.png");*/
+	}
 }
 
 // change la direction de la balle apres une collision 

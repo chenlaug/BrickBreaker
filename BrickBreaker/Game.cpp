@@ -3,7 +3,7 @@
 #include <iostream>
 
 // constructeur de la classe Game
-Game::Game() : window(800, 600, "Brick Breaker"), event(&window), systeme(ecsManager) {}
+Game::Game() : window(800, 600, "Brick Breaker"), event(&window), systeme(ecsManager,window) {}
 
 // destructeur de la classe Game
 Game::~Game() {

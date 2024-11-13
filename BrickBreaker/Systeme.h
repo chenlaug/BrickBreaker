@@ -1,12 +1,14 @@
 #pragma once
 #include "ECSManager.h"
+#include "Window.h"
 
 class Systeme
 {
 private:
-	ECSManager& ecsManager; 
+	ECSManager& ecsManager;
+	Window& window;
 public:
-	Systeme(ECSManager& manager); 
+	Systeme(ECSManager& manager, Window& win); 
 	~Systeme();
 
 	void createEntity();
