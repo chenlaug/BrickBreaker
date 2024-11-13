@@ -5,9 +5,10 @@
 class Systeme
 {
 private:
-	ECSManager& ecsManager; 
+	ECSManager& ecsManager;
+	Window& window;
 public:
-	Systeme(ECSManager& manager); 
+	Systeme(ECSManager& manager, Window& win); 
 	~Systeme();
 
 	void createEntity();

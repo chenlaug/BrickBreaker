@@ -22,7 +22,7 @@ Window::~Window()
 
 // Cette fonction permet de vider la fenêtre
 void Window::clear() {
-	window.clear(sf::Color::White);
+	window.clear(sf::Color::Black);
 }
 
 // Cette fonction permet de fermer la fenêtre

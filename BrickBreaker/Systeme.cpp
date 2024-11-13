@@ -2,7 +2,8 @@
 #include "Component.h"
 #include <iostream>
 
-Systeme::Systeme(ECSManager& manager) : ecsManager(manager) {}
+Systeme::Systeme(ECSManager& manager, Window& win)
+	: ecsManager(manager), window(win) {}
 
 Systeme::~Systeme()
 {
@@ -11,17 +12,17 @@ Systeme::~Systeme()
 void Systeme::createEntity()
 {
 
-	EntityId racket = ecsManager->createEntity();
+	EntityId racket = ecsManager.createEntity();
 
-	ecsManager->addComponent<position>(racket, { 100.0f, 250.0f });
-	ecsManager->addComponent<size>(racket, { 100.0f, 20.0f });
-	ecsManager->addComponent<color>(racket, { 255, 0, 0, 255 });
+	ecsManager.addComponent<position>(racket, { 100.0f, 250.0f });
+	ecsManager.addComponent<size>(racket, { 100.0f, 20.0f });
+	ecsManager.addComponent<color>(racket, { 255, 0, 0, 255 });
 	/*ecsManager->addComponent<texture>(racket, "racket.png");*/
 
-	EntityId ball = ecsManager->createEntity();
-	ecsManager->addComponent<position>(ball, { 100.0f, 200.0f });
-	ecsManager->addComponent<size>(ball, { 20.0f, 20.0f });
-	ecsManager->addComponent<color>(ball, { 0, 255, 0, 255 });
+	EntityId ball = ecsManager.createEntity();
+	ecsManager.addComponent<position>(ball, { 100.0f, 200.0f });
+	ecsManager.addComponent<size>(ball, { 20.0f, 20.0f });
+	ecsManager.addComponent<color>(ball, { 0, 255, 0, 255 });
 	/*ecsManager->addComponent<texture>(ball, "ball.png");*/
 
 	float posX = 0;
@@ -30,9 +31,9 @@ void Systeme::createEntity()
 	float height = 20.0f;
 	for (int i = 0; i < 64; i++)
 	{
-		EntityId brick = ecsManager->createEntity();
+		EntityId brick = ecsManager.createEntity();
 
-		if (window->getSize().x >= (posX + width))
+		if (window.getSize().x >= (posX + width))
 		{
 			posX += width;
 		}
@@ -42,14 +43,42 @@ void Systeme::createEntity()
 			posY += height;
 		}
 
-		ecsManager->addComponent<position>(brick, { posX, posY });
-		ecsManager->addComponent<size>(brick, { width, height });
+		ecsManager.addComponent<position>(brick, { posX, posY });
+		ecsManager.addComponent<size>(brick, { width, height });
 
-		int red = rand() % 256;
-		int green = rand() % 256;
-		int blue = rand() % 256;
-		ecsManager->addComponent<color>(brick, { red, green, blue, 255 });
-		/*ecsManager->addComponent<texture>(brick, "brick.png");*/
+		EntityId ball = ecsManager.createEntity();
+		ecsManager.addComponent<position>(ball, { 100.0f, 200.0f });
+		ecsManager.addComponent<velocity>(ball, { 0.0f, 0.0f });
+		ecsManager.addComponent<size>(ball, { 20.0f, 20.0f });
+		ecsManager.addComponent<color>(ball, { 0, 255, 0, 255 });
+		// ecsManager->addComponent<texture>(ball, "ball.png");
+		float posX = 0;
+		float posY = 0;
+		float width = 50.0f;
+		float height = 20.0f;
+		for (int i = 0; i < 64; i++)
+		{
+			EntityId brick = ecsManager.createEntity();
+
+			if (window.getSize().x >= (posX + width))
+			{
+				posX += width;
+			}
+			else
+			{
+				posX = 0;
+				posY += height;
+			}
+
+			ecsManager.addComponent<position>(brick, { posX, posY });
+			ecsManager.addComponent<size>(brick, { width, height });
+
+			int red = rand() % 255;
+			int green = rand() % 255;
+			int blue = rand() % 255;
+			ecsManager.addComponent<color>(brick, { 0, 255, 0, 255 });
+			/*ecsManager->addComponent<texture>(brick, "brick.png");*/
+		}
 	}
 }
 
