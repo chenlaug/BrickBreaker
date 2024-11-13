@@ -1,11 +1,13 @@
+#include "Systeme.h"
 #include "Event.h"
 #include <iostream>
 #include "Window.h"
 
 // Constructeur de la classe Event
-Event::Event(Window* window)
+Event::Event(Window* window, Systeme* systeme)
 {
 	this->window = window;
+	this->systeme = systeme;
 }
 
 // Cette fonction permet de gérer les événements de la fenêtre
@@ -27,6 +29,7 @@ void Event::handleEvent()
 
 			case sf::Keyboard::Right:
 				std::cout << "Right" << std::endl;
+				systeme->moveRacketRight();
 				// c'est ici qu'on vas rajouter la fonction pour bouger la raquette ->
 				break;
 
@@ -40,8 +43,6 @@ void Event::handleEvent()
 				window->toggleFullscreen();
 				break;
 			}
-
-
 		}
 	}
 }

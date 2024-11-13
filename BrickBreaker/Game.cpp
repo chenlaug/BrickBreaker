@@ -3,7 +3,7 @@
 #include <iostream>
 
 // constructeur de la classe Game
-Game::Game() : window(800, 600, "Brick Breaker"), event(&window), systeme(ecsManager,window) {}
+Game::Game() : window(800, 600, "Brick Breaker"), event(&window,&systeme), systeme(ecsManager,window) {}
 
 // destructeur de la classe Game
 Game::~Game() {
@@ -17,12 +17,19 @@ void Game::init()
 
 }
 
+// Cette fonction gère la logique du jeu
+void Game::functionality() {
+	systeme.moveBall();
 
+}
+
+// Cette fonction est la boucle principale du jeu
 void Game::run()
 {
 	init();
 	while (window.isOpen()) {
 		event.handleEvent();
+		functionality();
 		window.clear();
 		fpsConter.display();
 

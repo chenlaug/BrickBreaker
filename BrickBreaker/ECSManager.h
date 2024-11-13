@@ -15,10 +15,13 @@ private:
 	EntityId nextEntityId = 0;
 	std::vector<EntityId> entities;
 	std::unordered_map<std::type_index, std::unordered_map<EntityId, std::shared_ptr<void>>> components;
+	std::unordered_map<std::string, EntityId> namedEntities;
 
 public:
 	EntityId createEntity();
 	void destroyEntity(EntityId entity);
+	void nameEntity(const std::string& name, EntityId entity);
+	EntityId getEntityByName(const std::string& name) const;
 	const std::vector<EntityId>& getEntities() const;
 
 	template<typename Component>

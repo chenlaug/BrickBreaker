@@ -19,6 +19,26 @@ void ECSManager::destroyEntity(EntityId entity)
     entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
 }
 
+// Ajouter un nom a une entité
+void ECSManager::nameEntity(const std::string& name, EntityId entity)
+{
+    if (namedEntities.find(name) != namedEntities.end()) {
+        throw std::runtime_error("Entity name already exists: " + name);
+    }
+    namedEntities[name] = entity;
+}
+
+// Retourne l'entité avec le nom donné
+EntityId ECSManager::getEntityByName(const std::string& name) const
+{
+    auto it = namedEntities.find(name);
+    if (it != namedEntities.end()) {
+        return it->second;
+    }
+    throw std::runtime_error("No entity found with name: " + name);
+}
+
+
 // Retourne la liste des entités
 const std::vector<EntityId>& ECSManager::getEntities() const {
     return entities;

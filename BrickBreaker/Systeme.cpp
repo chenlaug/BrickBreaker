@@ -10,70 +10,74 @@ Systeme::~Systeme()
 }
 
 void Systeme::createEntity() {
-    // Récupérer la taille de la fenêtre
-    float windowWidth = static_cast<float>(window.getSize().x);
-    float windowHeight = static_cast<float>(window.getSize().y);
+	// Récupérer la taille de la fenêtre
+	float windowWidth = static_cast<float>(window.getSize().x);
+	float windowHeight = static_cast<float>(window.getSize().y);
 
-    // Création de la raquette (centrée en bas)
-    float racketWidth = windowWidth * 0.1f; 
-    float racketHeight = windowHeight * 0.03f; 
-    float racketX = (windowWidth - racketWidth) / 2.0f; 
-    float racketY = windowHeight - (2 * racketHeight);
+	// Création de la raquette (centrée en bas)
+	float racketWidth = windowWidth * 0.1f;
+	float racketHeight = windowHeight * 0.03f;
+	float racketX = (windowWidth - racketWidth) / 2.0f;
+	float racketY = windowHeight - (2 * racketHeight);
 
-    EntityId racket = ecsManager.createEntity();
-    ecsManager.addComponent<position>(racket, { racketX, racketY });
-    ecsManager.addComponent<size>(racket, { racketWidth, racketHeight });
-    ecsManager.addComponent<color>(racket, { 255, 0, 0, 255 }); // Rouge
+	EntityId racket = ecsManager.createEntity();
+	ecsManager.addComponent<velocity>(racket, { 2.0f, 2.0f });
+	ecsManager.addComponent<position>(racket, { racketX, racketY });
+	ecsManager.addComponent<size>(racket, { racketWidth, racketHeight });
+	ecsManager.addComponent<color>(racket, { 255, 0, 0, 255 }); // Rouge
+	ecsManager.nameEntity("racket", racket);
 
-    // Création de la balle (au-dessus de la raquette)
-    float ballSize = windowWidth * 0.02f; 
-    float ballX = racketX + (racketWidth - ballSize) / 2.0f; 
-    float ballY = racketY - (1.5f * ballSize); 
+	// Création de la balle (au-dessus de la raquette)
+	float ballSize = windowWidth * 0.02f;
+	float ballX = racketX + (racketWidth - ballSize) / 2.0f;
+	float ballY = racketY - (1.5f * ballSize);
 
-    EntityId ball = ecsManager.createEntity();
-    ecsManager.addComponent<position>(ball, { ballX, ballY });
-    ecsManager.addComponent<size>(ball, { ballSize, ballSize });
-    ecsManager.addComponent<color>(ball, { 0, 255, 0, 255 }); // Vert
+	EntityId ball = ecsManager.createEntity();
+	ecsManager.addComponent<velocity>(ball, { 0.2f, 0.2f });
+	ecsManager.addComponent<position>(ball, { ballX, ballY });
+	ecsManager.addComponent<size>(ball, { ballSize, ballSize });
+	ecsManager.addComponent<color>(ball, { 0, 255, 0, 255 }); // Vert
+	ecsManager.nameEntity("ball", ball);
 
-    // Paramètres pour les briques
-    float brickWidth = windowWidth * 0.1f;  
-    float brickHeight = windowHeight * 0.04f; 
-    float spacingX = brickWidth * 0.1f; 
-    float spacingY = brickHeight * 0.1f; 
+	// Paramètres pour les briques
+	float brickWidth = windowWidth * 0.1f;
+	float brickHeight = windowHeight * 0.04f;
+	float spacingX = brickWidth * 0.1f;
+	float spacingY = brickHeight * 0.1f;
 
-    float startX = spacingX; 
-    float startY = spacingY; 
+	float startX = spacingX;
+	float startY = spacingY;
 
-    float posX = startX;
-    float posY = startY;
+	float posX = startX;
+	float posY = startY;
 
-    int bricksPerRow = static_cast<int>((windowWidth - startX) / (brickWidth + spacingX));
+	int bricksPerRow = static_cast<int>((windowWidth - startX) / (brickWidth + spacingX));
 
-    // Générer les briques
-    for (int i = 0; i < 63; i++) {
-        EntityId brick = ecsManager.createEntity();
+	// Générer les briques
+	for (int i = 0; i < 63; i++) {
+		EntityId brick = ecsManager.createEntity();
 
-        // Position de la brique
-        ecsManager.addComponent<position>(brick, { posX, posY });
-        ecsManager.addComponent<size>(brick, { brickWidth, brickHeight });
+		// Position de la brique
+		ecsManager.addComponent<position>(brick, { posX, posY });
+		ecsManager.addComponent<size>(brick, { brickWidth, brickHeight });
 
-        // Couleur aléatoire
-        int red = rand() % 256;
-        int green = rand() % 256;
-        int blue = rand() % 256;
-        ecsManager.addComponent<color>(brick, { red, green, blue, 255 });
+		// Couleur aléatoire
+		int red = rand() % 256;
+		int green = rand() % 256;
+		int blue = rand() % 256;
+		ecsManager.addComponent<color>(brick, { red, green, blue, 255 });
+		ecsManager.nameEntity("brick :" + std::to_string(i), brick);
 
-        // Passer à la brique suivante
-        posX += brickWidth + spacingX;
+		// Passer à la brique suivante
+		posX += brickWidth + spacingX;
 
-        // Si on dépasse la largeur de la fenêtre, aller à la ligne suivante
-        if (i % bricksPerRow == (bricksPerRow - 1)) {
-            posX = startX; 
-            posY += brickHeight + spacingY; 
-        }
-    }
+		// Si on dépasse la largeur de la fenêtre, aller à la ligne suivante
+		if (i % bricksPerRow == (bricksPerRow - 1)) {
+			posX = startX;
+			posY += brickHeight + spacingY;
+		}
+	}
 }
-
 
 // change la direction de la balle apres une collision 
 void Systeme::onCollision(EntityId e1, EntityId e2)
@@ -94,17 +98,54 @@ void Systeme::brickBreak(EntityId e)
 	ecsManager.destroyEntity(e);
 }
 
-void Systeme::entityMove(EntityId e)
+void Systeme::moveBall()
 {
-	position* pos = ecsManager.getComponent<position>(e);
-	velocity* velo = ecsManager.getComponent<velocity>(e);
+	int windowWidth = window.getSize().x;
+	int windowHeight = window.getSize().y;
 
-	if (pos && velo)
-	{
-		pos->posX += velo->veloX;
-		pos->posY += velo->veloY;
+	EntityId ball = ecsManager.getEntityByName("ball");
+	position* ballPos = ecsManager.getComponent<position>(ball);
+	velocity* ballVelo = ecsManager.getComponent<velocity>(ball);
+	size* ballSize = ecsManager.getComponent<size>(ball);
+
+	if (ballPos && ballVelo && ballSize) {
+		// Mise à jour de la position
+		ballPos->posX += ballVelo->veloX;
+		ballPos->posY += ballVelo->veloY;
+
+		// Gestion des rebonds
+		if (ballPos->posX <= 0 || ballPos->posX + ballSize->width >= windowWidth) {
+			ballVelo->veloX = -ballVelo->veloX; // Rebond sur les côtés
+		}
+
+		if (ballPos->posY <= 0 || ballPos->posY + ballSize->height >= windowHeight) {
+			ballVelo->veloY = -ballVelo->veloY; // Rebond sur le haut et le bas
+		}
+	}
+	else {
+		std::cerr << "Erreur : Composants manquants pour l'entité 'ball'" << std::endl;
 	}
 }
+
+void Systeme::moveRacketRight()
+{
+	EntityId racket = ecsManager.getEntityByName("racket");
+	position* racketPos = ecsManager.getComponent<position>(racket);
+	velocity* racketVelo = ecsManager.getComponent<velocity>(racket);
+	size* racketSize = ecsManager.getComponent<size>(racket);
+
+	if (!(racketPos && racketVelo && racketSize))
+	{
+	 std::cerr << "Erreur : Composants manquants pour l'entité 'racket'" << std::endl;
+
+	}
+	else
+	{
+		racketPos->posX += racketVelo->veloX;
+	}
+
+}
+
 
 void Systeme::destroyEntity(EntityId e)
 {

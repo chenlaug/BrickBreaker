@@ -14,6 +14,8 @@ public:
 	void createEntity();
 	void onCollision(EntityId e1, EntityId e2);
 	void brickBreak(EntityId e);
-	void entityMove(EntityId e);
+	void moveBall();
+	void moveRacketRight();
+	void moveRacketLeft();
 	void destroyEntity(EntityId e);
 };

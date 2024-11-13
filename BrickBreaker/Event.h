@@ -7,9 +7,10 @@ class Event
 private:
 	sf::Event event;
 	Window* window;
+	Systeme* systeme;
 
 public:
-	Event(Window* window); 
+	Event(Window* window, Systeme* systeme);
 	void handleEvent();
 };
 
