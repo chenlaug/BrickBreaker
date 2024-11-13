@@ -9,78 +9,71 @@ Systeme::~Systeme()
 {
 }
 
-void Systeme::createEntity()
-{
+void Systeme::createEntity() {
+    // Récupérer la taille de la fenêtre
+    float windowWidth = static_cast<float>(window.getSize().x);
+    float windowHeight = static_cast<float>(window.getSize().y);
 
-	EntityId racket = ecsManager.createEntity();
+    // Création de la raquette (centrée en bas)
+    float racketWidth = windowWidth * 0.1f; 
+    float racketHeight = windowHeight * 0.03f; 
+    float racketX = (windowWidth - racketWidth) / 2.0f; 
+    float racketY = windowHeight - (2 * racketHeight);
 
-	ecsManager.addComponent<position>(racket, { 100.0f, 250.0f });
-	ecsManager.addComponent<size>(racket, { 100.0f, 20.0f });
-	ecsManager.addComponent<color>(racket, { 255, 0, 0, 255 });
-	/*ecsManager->addComponent<texture>(racket, "racket.png");*/
+    EntityId racket = ecsManager.createEntity();
+    ecsManager.addComponent<position>(racket, { racketX, racketY });
+    ecsManager.addComponent<size>(racket, { racketWidth, racketHeight });
+    ecsManager.addComponent<color>(racket, { 255, 0, 0, 255 }); // Rouge
 
-	EntityId ball = ecsManager.createEntity();
-	ecsManager.addComponent<position>(ball, { 100.0f, 200.0f });
-	ecsManager.addComponent<size>(ball, { 20.0f, 20.0f });
-	ecsManager.addComponent<color>(ball, { 0, 255, 0, 255 });
-	/*ecsManager->addComponent<texture>(ball, "ball.png");*/
+    // Création de la balle (au-dessus de la raquette)
+    float ballSize = windowWidth * 0.02f; 
+    float ballX = racketX + (racketWidth - ballSize) / 2.0f; 
+    float ballY = racketY - (1.5f * ballSize); 
 
-	float posX = 0;
-	float posY = 0;
-	float width = 50.0f;
-	float height = 20.0f;
-	for (int i = 0; i < 64; i++)
-	{
-		EntityId brick = ecsManager.createEntity();
+    EntityId ball = ecsManager.createEntity();
+    ecsManager.addComponent<position>(ball, { ballX, ballY });
+    ecsManager.addComponent<size>(ball, { ballSize, ballSize });
+    ecsManager.addComponent<color>(ball, { 0, 255, 0, 255 }); // Vert
 
-		if (window.getSize().x >= (posX + width))
-		{
-			posX += width;
-		}
-		else
-		{
-			posX = 0;
-			posY += height;
-		}
+    // Paramètres pour les briques
+    float brickWidth = windowWidth * 0.1f;  
+    float brickHeight = windowHeight * 0.04f; 
+    float spacingX = brickWidth * 0.1f; 
+    float spacingY = brickHeight * 0.1f; 
 
-		ecsManager.addComponent<position>(brick, { posX, posY });
-		ecsManager.addComponent<size>(brick, { width, height });
+    float startX = spacingX; 
+    float startY = spacingY; 
 
-		EntityId ball = ecsManager.createEntity();
-		ecsManager.addComponent<position>(ball, { 100.0f, 200.0f });
-		ecsManager.addComponent<velocity>(ball, { 0.0f, 0.0f });
-		ecsManager.addComponent<size>(ball, { 20.0f, 20.0f });
-		ecsManager.addComponent<color>(ball, { 0, 255, 0, 255 });
-		// ecsManager->addComponent<texture>(ball, "ball.png");
-		float posX = 0;
-		float posY = 0;
-		float width = 50.0f;
-		float height = 20.0f;
-		for (int i = 0; i < 64; i++)
-		{
-			EntityId brick = ecsManager.createEntity();
+    float posX = startX;
+    float posY = startY;
 
-			if (window.getSize().x >= (posX + width))
-			{
-				posX += width;
-			}
-			else
-			{
-				posX = 0;
-				posY += height;
-			}
+    int bricksPerRow = static_cast<int>((windowWidth - startX) / (brickWidth + spacingX));
 
-			ecsManager.addComponent<position>(brick, { posX, posY });
-			ecsManager.addComponent<size>(brick, { width, height });
+    // Générer les briques
+    for (int i = 0; i < 63; i++) {
+        EntityId brick = ecsManager.createEntity();
 
-			int red = rand() % 255;
-			int green = rand() % 255;
-			int blue = rand() % 255;
-			ecsManager.addComponent<color>(brick, { 0, 255, 0, 255 });
-			/*ecsManager->addComponent<texture>(brick, "brick.png");*/
-		}
-	}
+        // Position de la brique
+        ecsManager.addComponent<position>(brick, { posX, posY });
+        ecsManager.addComponent<size>(brick, { brickWidth, brickHeight });
+
+        // Couleur aléatoire
+        int red = rand() % 256;
+        int green = rand() % 256;
+        int blue = rand() % 256;
+        ecsManager.addComponent<color>(brick, { red, green, blue, 255 });
+
+        // Passer à la brique suivante
+        posX += brickWidth + spacingX;
+
+        // Si on dépasse la largeur de la fenêtre, aller à la ligne suivante
+        if (i % bricksPerRow == (bricksPerRow - 1)) {
+            posX = startX; 
+            posY += brickHeight + spacingY; 
+        }
+    }
 }
+
 
 // change la direction de la balle apres une collision 
 void Systeme::onCollision(EntityId e1, EntityId e2)

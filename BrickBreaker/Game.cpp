@@ -24,6 +24,7 @@ void Game::run()
 	while (window.isOpen()) {
 		event.handleEvent();
 		window.clear();
+		fpsConter.display();
 
 
 		// Rendu graphique des entités
@@ -42,7 +43,7 @@ void Game::run()
 				window.draw(rect); // Dessiner le rectangle
 			}
 		}
-
+		window.draw(fpsConter.getText());
 		// Afficher la fenêtre
 		window.display();
 	}
