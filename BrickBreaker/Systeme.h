@@ -4,9 +4,9 @@
 class Systeme
 {
 private:
-	ECSManager* ecsManager;
+	ECSManager& ecsManager; 
 public:
-	Systeme();
+	Systeme(ECSManager& manager); 
 	~Systeme();
 
 	void createEntity();
