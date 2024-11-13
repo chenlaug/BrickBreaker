@@ -1,39 +1,50 @@
 #include "FPSConter.h"
 #include <iostream>
- 
-// Cette fonction permet d'initialiser la police de caractères
-void FPSConter::init()
+#include <iomanip>
+
+// Initialisation de la police et des paramètres du texte
+void FPSConter::init(const std::string& fontPath)
 {
-    if (!font.loadFromFile("../Resource/Font/Roboto-Medium.ttf")) {
-        throw std::runtime_error("Impossible de charger la police de caractères.");
+    if (!font.loadFromFile(fontPath)) {
+        throw std::runtime_error("Impossible de charger la police de caractères : " + fontPath);
     }
     text.setFont(font);
-    text.setCharacterSize(24);
-    text.setFillColor(sf::Color::Red);
+    text.setCharacterSize(20);
+    text.setFillColor(sf::Color::White);
     text.setPosition(10, 10);
 }
 
-// Cette fonction permet de calculer le nombre d'images par seconde
-float FPSConter::getFps()
+// Mise à jour des FPS et du deltaTime
+void FPSConter::update()
 {
-    frame++;
-    time += clock.restart();
-    if (time.asSeconds() >= 1.0f)
+    deltaTime = clock.restart().asSeconds();
+
+    frameCount++;
+    elapsedTime += sf::seconds(deltaTime);
+
+    if (elapsedTime.asSeconds() >= 1.0f)
     {
-        fps = frame / time.asSeconds();
-        frame = 0;
-        time = sf::Time::Zero;
+        fps = frameCount / elapsedTime.asSeconds(); 
+        frameCount = 0;                           
+        elapsedTime = sf::Time::Zero;             
     }
+
+    text.setString("FPS: " + std::to_string(static_cast<int>(fps)));
+}
+
+// Retourne les FPS actuels
+float FPSConter::getFps() const
+{
     return fps;
 }
 
-// Cette fonction permet d'afficher le nombre d'images par seconde
-void FPSConter::display()
+// Retourne le deltaTime actuel
+float FPSConter::getDeltaTime() const
 {
-    text.setString("FPS: " + std::to_string(static_cast<int>(getFps())));
+    return deltaTime;
 }
 
-// Cette fonction permet de retourner le texte
+// Retourne l'objet texte pour l'affichage
 const sf::Text& FPSConter::getText() const
 {
     return text;

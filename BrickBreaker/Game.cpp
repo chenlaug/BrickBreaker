@@ -18,8 +18,9 @@ void Game::init()
 }
 
 // Cette fonction gère la logique du jeu
-void Game::functionality() {
-	systeme.moveBall();
+void Game::functionality(float deltatime) {
+	systeme.moveBall(deltatime);
+	systeme.checkBallBrickCollision();
 
 }
 
@@ -28,28 +29,17 @@ void Game::run()
 {
 	init();
 	while (window.isOpen()) {
-		event.handleEvent();
-		functionality();
+		event.handleEvent(fpsConter.getDeltaTime());
+		functionality(fpsConter.getDeltaTime());
+		fpsConter.update();
 		window.clear();
-		fpsConter.display();
 
 
-		// Rendu graphique des entités
 		for (auto e : ecsManager.getEntities()) {
-			// Récupérer les composants de l'entité
-			position* pos = ecsManager.getComponent<position>(e);
-			size* s = ecsManager.getComponent<size>(e);
-			color* c = ecsManager.getComponent<color>(e);
-
-			if (pos && s && c) { // Vérifie que tous les composants nécessaires sont présents
-				sf::RectangleShape rect;
-				rect.setSize(sf::Vector2f(s->width, s->height));     // Taille
-				rect.setPosition(pos->posX, pos->posY);              // Position
-				rect.setFillColor(sf::Color(c->red, c->green, c->blue, c->alpha)); // Couleur
-
-				window.draw(rect); // Dessiner le rectangle
-			}
+			systeme.renderEntity(e, window.getRenderWindow());
 		}
+
+
 		window.draw(fpsConter.getText());
 		// Afficher la fenêtre
 		window.display();

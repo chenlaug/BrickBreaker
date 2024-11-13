@@ -11,38 +11,55 @@ Event::Event(Window* window, Systeme* systeme)
 }
 
 // Cette fonction permet de gérer les événements de la fenêtre
-void Event::handleEvent()
+void Event::handleEvent(float deltaTime)
 {
-	while (window->pollEvent(event))
-	{
-		switch (event.type) {
-		case sf::Event::Closed:
-			window->close();
-			break;
+    while (window->pollEvent(event))
+    {
+        switch (event.type) {
+        case sf::Event::Closed:
+            window->close();
+            break;
 
-		case sf::Event::KeyPressed:
+        case sf::Event::KeyPressed:
+            switch (event.key.code) {
+            case sf::Keyboard::Escape:
+                window->close();
+                break;
 
-			switch (event.key.code) {
-			case sf::Keyboard::Escape:
-				window->close();
-				break;
+            case sf::Keyboard::Right:
+                isMovingRight = true; // La touche "Right" est enfoncée
+                break;
 
-			case sf::Keyboard::Right:
-				std::cout << "Right" << std::endl;
-				systeme->moveRacketRight();
-				// c'est ici qu'on vas rajouter la fonction pour bouger la raquette ->
-				break;
+            case sf::Keyboard::Left:
+                isMovingLeft = true; // La touche "Left" est enfoncée
+                break;
 
-			case sf::Keyboard::Left:
-				std::cout << "Left" << std::endl;
-				// c'est ici qu'on vas rajouter la fonction pour bouger la raquette <-
-				break;
-			case sf::Keyboard::F:
-			case sf::Keyboard::F11:
-				// Mettre en plein écran ou en fenêtré selon l'état actuel de la fenêtre avec F ou F11
-				window->toggleFullscreen();
-				break;
-			}
-		}
-	}
+            case sf::Keyboard::F:
+            case sf::Keyboard::F11:
+                window->toggleFullscreen();
+                break;
+            }
+            break;
+
+        case sf::Event::KeyReleased:
+            switch (event.key.code) {
+            case sf::Keyboard::Right:
+                isMovingRight = false; // La touche "Right" est relâchée
+                break;
+
+            case sf::Keyboard::Left:
+                isMovingLeft = false; // La touche "Left" est relâchée
+                break;
+            }
+            break;
+        }
+    }
+
+    // Appliquer les mouvements si les touches sont enfoncées
+    if (isMovingRight) {
+        systeme->moveRacketRight(deltaTime);
+    }
+    if (isMovingLeft) {
+        systeme->moveRacketLeft(deltaTime);
+    }
 }

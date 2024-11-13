@@ -14,8 +14,10 @@ public:
 	void createEntity();
 	void onCollision(EntityId e1, EntityId e2);
 	void brickBreak(EntityId e);
-	void moveBall();
-	void moveRacketRight();
-	void moveRacketLeft();
+	void moveBall(float deltaTime);
+	void moveRacketRight(float deltaTime);
+	void moveRacketLeft(float deltaTime);
+	void renderEntity(EntityId e, sf::RenderWindow& window);
+	void checkBallBrickCollision();
 	void destroyEntity(EntityId e);
 };

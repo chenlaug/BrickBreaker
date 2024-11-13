@@ -10,7 +10,7 @@ public:
 	Game();
 	~Game();
 	void init();
-	void functionality();
+	void functionality(float deltatime);
 	void run();
 
 private:
