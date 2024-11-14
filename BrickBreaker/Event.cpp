@@ -43,7 +43,7 @@ void Event::handleEvent(float deltaTime)
 
 			case sf::Keyboard::F:
 			case sf::Keyboard::F11:
-				window->reCreateWindow();
+				// window->reCreateWindow();
 				break;
 			}
 			break;

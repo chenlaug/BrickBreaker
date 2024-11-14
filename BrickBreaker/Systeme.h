@@ -1,4 +1,5 @@
 #pragma once
+#pragma once
 #include "ECSManager.h"
 #include "Window.h"
 #include "Component.h"
@@ -38,4 +39,5 @@ public:
 	void moveRacketRight(float deltaTime);
 	void applyBonus(Bonus* bonusComp, EntityId entity);
 	void limitBallSpeed(EntityId ball, float maxSpeed);
+	void updateBrickColor(EntityId brick);
 };

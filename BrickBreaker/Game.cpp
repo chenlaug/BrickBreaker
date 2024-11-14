@@ -36,7 +36,7 @@ void Game::run()
 		functionality(fpsConter.getDeltaTime());
 		fpsConter.update();
 		window.clear();
-
+		window.drawBackground();
 
 		for (auto e : ecsManager.getEntities()) {
 			systeme.renderEntity(e, window.getRenderWindow());
@@ -44,7 +44,6 @@ void Game::run()
 
 
 		window.draw(fpsConter.getText());
-		// Afficher la fenêtre
 		window.display();
 	}
 }

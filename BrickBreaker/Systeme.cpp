@@ -7,6 +7,7 @@ Systeme::Systeme(ECSManager& manager, Window& win)
 
 Systeme::~Systeme() {}
 
+// Fonction pour creer les entites
 void Systeme::createEntity() {
 	float windowWidth = static_cast<float>(window.getSize().x);
 	float windowHeight = static_cast<float>(window.getSize().y);
@@ -27,7 +28,7 @@ void Systeme::createEntity() {
 	ecsManager.addComponent<Position>(ballMain, { windowWidth / 2 - 5.0f, windowHeight - 30.0f });
 	ecsManager.addComponent<Size>(ballMain, { 10.0f, 10.0f });
 	ecsManager.addComponent<Color>(ballMain, { 0, 255, 0, 255 });
-	ecsManager.addComponent<Velocity>(ballMain, { 0.0f, 0.0f }); 
+	ecsManager.addComponent<Velocity>(ballMain, { 0.0f, 0.0f });
 	ecsManager.addComponent<Ball>(ballMain, { true });
 
 	auto ballShape = std::make_shared<sf::CircleShape>(5.0f);
@@ -61,22 +62,15 @@ void Systeme::createEntity() {
 			auto brickShape = std::make_shared<sf::RectangleShape>(sf::Vector2f(brickWidth, brickHeight));
 			brickShape->setPosition(brickX, brickY);
 
-			if (health == 1) {
-				brickShape->setFillColor(sf::Color(255, 0, 0)); // Rouge
-			}
-			else if (health == 2) {
-				brickShape->setFillColor(sf::Color(255, 165, 0)); // Orange
-			}
-			else if (health == 3) {
-				brickShape->setFillColor(sf::Color(0, 255, 0)); // Vert
-			}
-
 			ecsManager.addComponent<RenderShape>(brick, { brickShape });
+			updateBrickColor(brick);
+
 		}
 	}
 
 }
 
+// Fonction pour deplace la balle principale
 void Systeme::moveBallMain(float deltaTime) {
 	auto ballMain = ecsManager.getEntityByName("ballMain");
 	auto racket = ecsManager.getEntityByName("racket");
@@ -110,7 +104,7 @@ void Systeme::moveBallMain(float deltaTime) {
 			ballVelo->x = -ballVelo->x;
 		}
 		if (ballPos->y <= 0) {
-			ballVelo->y = -ballVelo->y; 
+			ballVelo->y = -ballVelo->y;
 		}
 
 		if (ballPos->y > windowHeight) {
@@ -127,12 +121,13 @@ void Systeme::moveBallMain(float deltaTime) {
 	}
 }
 
+// Fonction pour deplace la balle bonus
 void Systeme::moveBallBonus(float deltaTime) {
 	for (auto ball : ecsManager.getEntities()) {
 		if (!ecsManager.hasComponent<Ball>(ball)) continue;
 
 		auto ballComp = ecsManager.getComponent<Ball>(ball);
-		if (ballComp->isMain) continue; 
+		if (ballComp->isMain) continue;
 
 		auto ballPos = ecsManager.getComponent<Position>(ball);
 		auto ballVelo = ecsManager.getComponent<Velocity>(ball);
@@ -147,10 +142,10 @@ void Systeme::moveBallBonus(float deltaTime) {
 		int windowHeight = window.getSize().y;
 
 		if (ballPos->x <= 0 || ballPos->x + ballSize->width >= windowWidth) {
-			ballVelo->x = -ballVelo->x; 
+			ballVelo->x = -ballVelo->x;
 		}
 		if (ballPos->y <= 0) {
-			ballVelo->y = -ballVelo->y; 
+			ballVelo->y = -ballVelo->y;
 		}
 
 		auto ballShape = ecsManager.getComponent<RenderShape>(ball);
@@ -165,6 +160,7 @@ void Systeme::moveBallBonus(float deltaTime) {
 	}
 }
 
+// Fonction pour deplace les bonus
 void Systeme::moveBonuses(float deltaTime) {
 	for (auto entity : ecsManager.getEntities()) {
 		if (ecsManager.hasComponent<Bonus>(entity)) {
@@ -185,6 +181,7 @@ void Systeme::moveBonuses(float deltaTime) {
 	}
 }
 
+// Fonction pour verifier les collisions avec les briques
 void Systeme::checkBallBrickCollision() {
 	std::vector<EntityId> bricksToDestroy;
 
@@ -201,7 +198,7 @@ void Systeme::checkBallBrickCollision() {
 
 			auto brickShape = ecsManager.getComponent<RenderShape>(brick);
 			auto brickComp = ecsManager.getComponent<Brick>(brick);
-			auto bonusComp = ecsManager.getComponent<Bonus>(brick); 
+			auto bonusComp = ecsManager.getComponent<Bonus>(brick);
 
 			if (!brickShape || !brickComp) continue;
 
@@ -233,14 +230,15 @@ void Systeme::checkBallBrickCollision() {
 				}
 
 				brickComp->health -= 1;
+				updateBrickColor(brick);
 				std::cout << "Brick " << brick << " health reduced to " << brickComp->health << std::endl;
 
 				if (brickComp->health <= 0 && bonusComp && bonusComp->active) {
 					EntityId bonus = ecsManager.createEntity();
 
 					ecsManager.addComponent<Position>(bonus, { brickShape->shape->getPosition().x, brickShape->shape->getPosition().y });
-					ecsManager.addComponent<Size>(bonus, { 20.0f, 20.0f }); 
-					ecsManager.addComponent<Velocity>(bonus, { 0.0f, 100.0f }); 
+					ecsManager.addComponent<Size>(bonus, { 20.0f, 20.0f });
+					ecsManager.addComponent<Velocity>(bonus, { 0.0f, 100.0f });
 					ecsManager.addComponent<Color>(bonus, { 255, 255, 0, 255 });
 					ecsManager.addComponent<Bonus>(bonus, { bonusComp->type, true });
 
@@ -252,7 +250,7 @@ void Systeme::checkBallBrickCollision() {
 					std::cout << "Bonus created at position (" << brickShape->shape->getPosition().x << ", " << brickShape->shape->getPosition().y << ") with type " << bonusComp->type << std::endl;
 				}
 
-				
+
 				if (brickComp->health <= 0) {
 					bricksToDestroy.push_back(brick);
 				}
@@ -268,6 +266,7 @@ void Systeme::checkBallBrickCollision() {
 	}
 }
 
+// Fonction pour verifier les collisions avec la raquette
 void Systeme::checkBallRacketCollision() {
 	auto racket = ecsManager.getEntityByName("racket");
 
@@ -288,15 +287,15 @@ void Systeme::checkBallRacketCollision() {
 		if (ballShape->shape->getGlobalBounds().intersects(racketShape->shape->getGlobalBounds())) {
 			std::cout << "Collision detected between ball " << ball << " and racket!" << std::endl;
 
-			ballVelo->y = -std::abs(ballVelo->y); 
+			ballVelo->y = -std::abs(ballVelo->y);
 
 			float ballCenterX = ballShape->shape->getPosition().x + ballShape->shape->getGlobalBounds().width / 2;
 			float racketCenterX = racketShape->shape->getPosition().x + racketShape->shape->getGlobalBounds().width / 2;
 			float impactOffset = (ballCenterX - racketCenterX) / (racketShape->shape->getGlobalBounds().width / 2);
 
-			ballVelo->x += impactOffset * 200.0f; 
+			ballVelo->x += impactOffset * 200.0f;
 
-			
+
 			if (std::abs(ballVelo->x) > 400.0f) {
 				ballVelo->x = (ballVelo->x > 0 ? 400.0f : -400.0f);
 			}
@@ -304,6 +303,7 @@ void Systeme::checkBallRacketCollision() {
 	}
 }
 
+// Fonction pour verifier les collisions avec les bonus
 void Systeme::checkBonusCollision() {
 	auto racket = ecsManager.getEntityByName("racket");
 	auto racketShape = ecsManager.getComponent<RenderShape>(racket);
@@ -317,12 +317,13 @@ void Systeme::checkBonusCollision() {
 		if (bonusShape && racketShape && bonusComp) {
 			if (bonusShape->shape->getGlobalBounds().intersects(racketShape->shape->getGlobalBounds())) {
 				applyBonus(bonusComp, racket);
-				ecsManager.destroyEntity(bonus); 
+				ecsManager.destroyEntity(bonus);
 			}
 		}
 	}
 }
 
+// Fonction pour verifier les collisions avec la raquette et les bonus
 void Systeme::checkBonusRacketCollision() {
 	auto racket = ecsManager.getEntityByName("racket");
 
@@ -353,6 +354,7 @@ void Systeme::checkBonusRacketCollision() {
 	}
 }
 
+// fonction pour rendre les entites
 void Systeme::renderEntity(EntityId entity, sf::RenderWindow& renderWindow) {
 	auto shape = ecsManager.getComponent<RenderShape>(entity);
 	if (shape) {
@@ -360,21 +362,26 @@ void Systeme::renderEntity(EntityId entity, sf::RenderWindow& renderWindow) {
 	}
 }
 
+// fonction pour lance la balle principale aleatoirement quand on appuie sur la touche espace etc
 void Systeme::launchBallMain() {
 	if (ballAttachedToRacket) {
 		auto ballMain = ecsManager.getEntityByName("ballMain");
 		auto ballVelo = ecsManager.getComponent<Velocity>(ballMain);
 
 		if (ballVelo) {
-			ballVelo->x = 150.0f;  
-			ballVelo->y = -200.0f; 
-		}
+			ballVelo->x = static_cast<float>(rand() % 201 - 100);
 
+			ballVelo->y = static_cast<float>(-(100 + rand() % 101));
+
+			if (std::abs(ballVelo->x) < 30) {
+				ballVelo->x += (ballVelo->x < 0 ? -30 : 30);
+			}
+		}
 		ballAttachedToRacket = false;
-		std::cout << "Ball launched!" << std::endl;
 	}
 }
 
+// fonction pour deplace la raquette a gauche
 void Systeme::moveRacketLeft(float deltaTime) {
 	auto racket = ecsManager.getEntityByName("racket");
 	auto pos = ecsManager.getComponent<Position>(racket);
@@ -390,6 +397,7 @@ void Systeme::moveRacketLeft(float deltaTime) {
 	}
 }
 
+// fonction pour deplace la raquette a droite
 void Systeme::moveRacketRight(float deltaTime) {
 	auto racket = ecsManager.getEntityByName("racket");
 	auto pos = ecsManager.getComponent<Position>(racket);
@@ -405,6 +413,7 @@ void Systeme::moveRacketRight(float deltaTime) {
 	}
 }
 
+// fonction pour appliquer les bonus
 void Systeme::applyBonus(Bonus* bonusComp, EntityId entity) {
 	if (bonusComp->type == "extra_ball") {
 		std::cout << "Applying bonus: extra ball" << std::endl;
@@ -436,7 +445,7 @@ void Systeme::applyBonus(Bonus* bonusComp, EntityId entity) {
 		auto racketShape = ecsManager.getComponent<RenderShape>(racket);
 
 		if (racketSize && racketShape) {
-			racketSize->width += 20.0f; 
+			racketSize->width += 20.0f;
 
 			auto rectShape = std::dynamic_pointer_cast<sf::RectangleShape>(racketShape->shape);
 			if (rectShape) {
@@ -446,6 +455,7 @@ void Systeme::applyBonus(Bonus* bonusComp, EntityId entity) {
 	}
 }
 
+// fonction pour verifier les collisions avec les murs
 void Systeme::limitBallSpeed(EntityId ball, float maxSpeed) {
 	auto ballVelo = ecsManager.getComponent<Velocity>(ball);
 	if (ballVelo) {
@@ -457,4 +467,40 @@ void Systeme::limitBallSpeed(EntityId ball, float maxSpeed) {
 		}
 	}
 }
+
+// fonction pour mettre a jour la couleur des briques
+void Systeme::updateBrickColor(EntityId brick) {
+	auto brickComp = ecsManager.getComponent<Brick>(brick);
+	auto renderShape = ecsManager.getComponent<RenderShape>(brick);
+
+	if (!brickComp) {
+		std::cerr << "Error: Missing Brick component for entity " << brick << std::endl;
+	}
+	if (!renderShape) {
+		std::cerr << "Error: Missing RenderShape component for entity " << brick << std::endl;
+	}
+
+	if (!brickComp || !renderShape) return;
+
+	// Mise à jour de la couleur
+	sf::Color newColor;
+	switch (brickComp->health) {
+	case 3:
+		newColor = sf::Color(0, 255, 0);
+		break;
+	case 2:
+		newColor = sf::Color(255, 165, 0);
+		break;
+	case 1:
+		newColor = sf::Color(255, 0, 0);
+		break;
+	default:
+		newColor = sf::Color(128, 128, 128);
+		break;
+	}
+	renderShape->shape->setFillColor(newColor);
+}
+
+
+
 
