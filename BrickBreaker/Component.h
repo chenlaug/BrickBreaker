@@ -25,6 +25,11 @@ struct color
 	int alpha;
 };
 
+struct bonus {
+	bool active;
+	std::string type; 
+};
+
 struct texture
 {
 	char* texture;

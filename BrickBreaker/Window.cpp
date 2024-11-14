@@ -31,17 +31,13 @@ void Window::close()
 	window.close();
 }
 
-// Cette fonction permet de mettre la fenêtre en plein écran ou en fenêtré
-void Window::toggleFullscreen()
-{
-	setFullscreen();
-	reCreateWindow();
-}
 
 // Cette fonction permet de recréer la fenêtre
 void Window::reCreateWindow()
 {
 	close();
+
+	this->isfullscreen = !isfullscreen;
 
 	if (this->isfullscreen)
 	{
@@ -88,11 +84,6 @@ sf::RenderWindow& Window::getRenderWindow() {
 	return window;
 }
 
-// Cette fonction permet de mettre la fenêtre en plein écran
-void Window::setFullscreen()
-{
-	this->isfullscreen = !isfullscreen;
-}
 
 // Cette fonction permet de dessiner un objet
 void Window::draw(const sf::Drawable& drawable)

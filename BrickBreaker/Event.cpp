@@ -4,7 +4,7 @@
 #include "Window.h"
 
 // Constructeur de la classe Event
-Event::Event(Window* window, Systeme* systeme)
+Event::Event(Window* window, Systeme* systeme) : event()
 {
 	this->window = window;
 	this->systeme = systeme;
@@ -13,53 +13,60 @@ Event::Event(Window* window, Systeme* systeme)
 // Cette fonction permet de gérer les événements de la fenêtre
 void Event::handleEvent(float deltaTime)
 {
-    while (window->pollEvent(event))
-    {
-        switch (event.type) {
-        case sf::Event::Closed:
-            window->close();
-            break;
+	while (window->pollEvent(event))
+	{
+		switch (event.type) {
+		case sf::Event::Closed:
+			window->close();
+			break;
 
-        case sf::Event::KeyPressed:
-            switch (event.key.code) {
-            case sf::Keyboard::Escape:
-                window->close();
-                break;
+		case sf::Event::KeyPressed:
+			switch (event.key.code) {
+			case sf::Keyboard::Escape:
+				window->close();
+				break;
 
-            case sf::Keyboard::Right:
-                isMovingRight = true; // La touche "Right" est enfoncée
-                break;
+                
+			case sf::Keyboard::Right:
+				isMovingRight = true; 
+				break;
 
-            case sf::Keyboard::Left:
-                isMovingLeft = true; // La touche "Left" est enfoncée
-                break;
+			case sf::Keyboard::Left:
+				isMovingLeft = true; 
+				break;
 
-            case sf::Keyboard::F:
-            case sf::Keyboard::F11:
-                window->toggleFullscreen();
-                break;
-            }
-            break;
+			case sf::Keyboard::Space:
+			case sf::Keyboard::Up:
+			case sf::Keyboard::Enter:
+				systeme->launchBall(); 
+				break;
 
-        case sf::Event::KeyReleased:
-            switch (event.key.code) {
-            case sf::Keyboard::Right:
-                isMovingRight = false; // La touche "Right" est relâchée
-                break;
+			case sf::Keyboard::F:
+			case sf::Keyboard::F11:
+				window->reCreateWindow();
+				break;
+			}
+			break;
 
-            case sf::Keyboard::Left:
-                isMovingLeft = false; // La touche "Left" est relâchée
-                break;
-            }
-            break;
-        }
-    }
+		case sf::Event::KeyReleased:
+			switch (event.key.code) {
+			case sf::Keyboard::Right:
+				isMovingRight = false; // La touche "Right" est relâchée
+				break;
 
-    // Appliquer les mouvements si les touches sont enfoncées
-    if (isMovingRight) {
-        systeme->moveRacketRight(deltaTime);
-    }
-    if (isMovingLeft) {
-        systeme->moveRacketLeft(deltaTime);
-    }
+			case sf::Keyboard::Left:
+				isMovingLeft = false; // La touche "Left" est relâchée
+				break;
+			}
+			break;
+		}
+	}
+
+	// Appliquer les mouvements si les touches sont enfoncées
+	if (isMovingRight) {
+		systeme->moveRacketRight(deltaTime);
+	}
+	if (isMovingLeft) {
+		systeme->moveRacketLeft(deltaTime);
+	}
 }
