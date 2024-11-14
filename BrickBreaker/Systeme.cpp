@@ -10,11 +10,9 @@ Systeme::~Systeme()
 }
 
 void Systeme::createEntity() {
-	// Récupérer la taille de la fenêtre
 	float windowWidth = static_cast<float>(window.getSize().x);
 	float windowHeight = static_cast<float>(window.getSize().y);
 
-	// Création de la raquette (centrée en bas)
 	float racketWidth = windowWidth * 0.1f;
 	float racketHeight = windowHeight * 0.03f;
 	float racketX = (windowWidth - racketWidth) / 2.0f;
@@ -27,7 +25,6 @@ void Systeme::createEntity() {
 	ecsManager.addComponent<color>(racket, { 255, 0, 0, 255 }); // Rouge
 	ecsManager.nameEntity("racket", racket);
 
-	// Création de la balle (au-dessus de la raquette)
 	float ballSize = windowWidth * 0.02f;
 	float ballX = racketX + (racketWidth - ballSize) / 2.0f;
 	float ballY = racketY - (1.5f * ballSize);
@@ -39,7 +36,6 @@ void Systeme::createEntity() {
 	ecsManager.addComponent<color>(ball, { 0, 255, 0, 255 }); // Vert
 	ecsManager.nameEntity("ball", ball);
 
-	// Paramètres pour les briques
 	float brickWidth = windowWidth * 0.1f;
 	float brickHeight = windowHeight * 0.04f;
 	float spacingX = brickWidth * 0.1f;
@@ -53,7 +49,6 @@ void Systeme::createEntity() {
 
 	int bricksPerRow = static_cast<int>((windowWidth - startX) / (brickWidth + spacingX));
 
-	// Générer les briques
 	for (int i = 0; i < 63; i++) {
 		EntityId brick = ecsManager.createEntity();
 
@@ -70,7 +65,6 @@ void Systeme::createEntity() {
 			ecsManager.addComponent<bonus>(brick, { true, "extra_ball" });
 		}
 
-		// Mise à jour des positions des briques
 		posX += brickWidth + spacingX;
 		if (i % bricksPerRow == (bricksPerRow - 1)) {
 			posX = startX;
@@ -86,23 +80,16 @@ void Systeme::createBonus(EntityId brickId) {
 
 	if (brickPos && brickSize) {
 		EntityId bonusEntity = ecsManager.createEntity();
+
 		ecsManager.addComponent<position>(bonusEntity, { brickPos->posX + brickSize->width / 2 - 10.0f, brickPos->posY });
-		ecsManager.addComponent<size>(bonusEntity, { 20.0f, 20.0f }); 
-		ecsManager.addComponent<velocity>(bonusEntity, { 0.0f, 150.0f }); 
-		ecsManager.addComponent<color>(bonusEntity, { 255, 255, 0, 255 }); // Couleur jaune
+		ecsManager.addComponent<size>(bonusEntity, { 20.0f, 20.0f });
+		ecsManager.addComponent<velocity>(bonusEntity, { 0.0f, 150.0f });
+		ecsManager.addComponent<color>(bonusEntity, { 255, 255, 0, 255 });
+		ecsManager.addComponent<bonus>(bonusEntity, { true, "extra_ball" });
+
 	}
-}
-
-// change la direction de la balle apres une collision 
-void Systeme::onCollision(EntityId e1, EntityId e2)
-{
-	velocity* velo1 = ecsManager.getComponent<velocity>(e1);
-	velocity* velo2 = ecsManager.getComponent<velocity>(e2);
-
-	if (velo1 && velo2)
-	{
-		velo1->veloY = -velo1->veloY;
-		velo2->veloY = -velo2->veloY;
+	else {
+		std::cerr << "Erreur : Impossible de créer un bonus, composants manquants pour la brique " << brickId << std::endl;
 	}
 }
 
@@ -173,10 +160,10 @@ void Systeme::moveBonuses(float deltaTime) {
 		size* bonusSize = ecsManager.getComponent<size>(e);
 
 		if (bonusPos && bonusVelo && bonusSize) {
-			// Déplacer le bonus
+	
 			bonusPos->posY += bonusVelo->veloY * deltaTime;
 
-			// Supprimer le bonus s'il dépasse le bas de la fenêtre
+			
 			if (bonusPos->posY > window.getSize().y) {
 				ecsManager.destroyEntity(e);
 			}
@@ -186,7 +173,7 @@ void Systeme::moveBonuses(float deltaTime) {
 
 void Systeme::applyBonus(bonus* bonusComp) {
 	if (bonusComp->type == "extra_ball") {
-		// Créer une nouvelle balle
+		
 		EntityId newBall = ecsManager.createEntity();
 
 		EntityId racket = ecsManager.getEntityByName("racket");
@@ -363,13 +350,19 @@ void Systeme::checkBonusCollision() {
 	position* racketPos = ecsManager.getComponent<position>(racket);
 	size* racketSize = ecsManager.getComponent<size>(racket);
 
+	if (!racketPos || !racketSize) {
+		std::cerr << "Erreur : Composants manquants pour la raquette !" << std::endl;
+		return;
+	}
+
 	for (auto e : ecsManager.getEntities()) {
 		position* bonusPos = ecsManager.getComponent<position>(e);
 		size* bonusSize = ecsManager.getComponent<size>(e);
 		bonus* bonusComp = ecsManager.getComponent<bonus>(e);
 
 		if (bonusPos && bonusSize && bonusComp) {
-			// Vérifier la collision avec la raquette
+
+
 			bool collisionX = bonusPos->posX + bonusSize->width > racketPos->posX &&
 				bonusPos->posX < racketPos->posX + racketSize->width;
 
@@ -377,15 +370,15 @@ void Systeme::checkBonusCollision() {
 				bonusPos->posY < racketPos->posY + racketSize->height;
 
 			if (collisionX && collisionY) {
-				// Appliquer l'effet du bonus
+
 				applyBonus(bonusComp);
 
-				// Supprimer le bonus
 				ecsManager.destroyEntity(e);
 			}
 		}
 	}
 }
+
 
 void Systeme::destroyEntity(EntityId e)
 {
