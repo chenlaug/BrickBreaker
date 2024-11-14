@@ -19,13 +19,13 @@ void Game::init()
 
 // Cette fonction gère la logique du jeu
 void Game::functionality(float deltaTime) {
-	systeme.moveBall(deltaTime);
+	systeme.moveBallMain(deltaTime);
+	systeme.moveBallBonus(deltaTime); 
 	systeme.moveBonuses(deltaTime); 
 	systeme.checkBonusCollision();
 	systeme.checkBallBrickCollision();
 	systeme.checkBallRacketCollision();
 }
-
 
 // Cette fonction est la boucle principale du jeu
 void Game::run()

@@ -1,33 +1,41 @@
 #pragma once
 #include "ECSManager.h"
 #include "Window.h"
-#include "Component.h" 
+#include "Component.h"
+#include <SFML/Graphics.hpp>
+#include <memory>
 
-
-class Systeme
-{
+class Systeme {
 private:
 	ECSManager& ecsManager;
 	Window& window;
-	bool ballOnRacket = true;
+	bool ballAttachedToRacket = true;
 
 public:
-	Systeme(ECSManager& manager, Window& win); 
+	Systeme(ECSManager& manager, Window& win);
 	~Systeme();
 
+	// Initialisation des entités
 	void createEntity();
-	void createBonus(EntityId brickId);
-	void onCollision(EntityId e1, EntityId e2);
-	void brickBreak(EntityId e);
-	void moveBall(float deltaTime);
+
+
+	// Logique du jeu
+	void moveBallMain(float deltaTime);
+	void moveBallBonus(float deltaTime);
 	void moveBonuses(float deltaTime);
-	void applyBonus(bonus* bonusComp);
-	void moveRacketRight(float deltaTime);
-	void moveRacketLeft(float deltaTime);
-	void renderEntity(EntityId e, sf::RenderWindow& window);
 	void checkBallBrickCollision();
 	void checkBallRacketCollision();
 	void checkBonusCollision();
-	void destroyEntity(EntityId e);
-	void launchBall();
+	void checkBonusRacketCollision();
+
+	// Rendu
+	void renderEntity(EntityId entity, sf::RenderWindow& renderWindow);
+
+
+	// Actions de jeu
+	void launchBallMain();
+	void moveRacketLeft(float deltaTime);
+	void moveRacketRight(float deltaTime);
+	void applyBonus(Bonus* bonusComp, EntityId entity);
+	void limitBallSpeed(EntityId ball, float maxSpeed);
 };

@@ -38,7 +38,7 @@ void Event::handleEvent(float deltaTime)
 			case sf::Keyboard::Space:
 			case sf::Keyboard::Up:
 			case sf::Keyboard::Enter:
-				systeme->launchBall(); 
+				systeme->launchBallMain();
 				break;
 
 			case sf::Keyboard::F:

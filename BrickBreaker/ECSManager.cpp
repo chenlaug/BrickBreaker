@@ -10,14 +10,15 @@ EntityId ECSManager::createEntity() {
 
 
 // Supprime une entité et tous ses composants
-void ECSManager::destroyEntity(EntityId entity)
-{
-    for (auto& [type, entityComponents] : components) {
-        entityComponents.erase(entity); // Supprime les composants de l'entité
+void ECSManager::destroyEntity(EntityId entity) {
+    for (auto& [type, componentMap] : components) {
+        componentMap.erase(entity); // Supprime uniquement les composants de l'entité
     }
-
     entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
+    std::cout << "Entity " << entity << " destroyed." << std::endl;
 }
+
+
 
 // Ajouter un nom a une entité
 void ECSManager::nameEntity(const std::string& name, EntityId entity)

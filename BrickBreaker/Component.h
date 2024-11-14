@@ -1,36 +1,43 @@
 #pragma once
-struct position
-{
-	float posX;
-	float posY;
+#include <SFML/Graphics.hpp>
+#include <memory>
+#include <string>
+
+// Composants de base
+struct Position {
+    float x, y; 
 };
 
-struct velocity
-{
-	float veloX;
-	float veloY;
+struct Velocity {
+    float x, y;
 };
 
-struct size
-{
-	float width;
-	float height;
+struct Size {
+    float width, height; 
 };
 
-struct color
-{
-	int red;
-	int green;
-	int blue;
-	int alpha;
+struct Color {
+    int red, green, blue, alpha; 
 };
 
-struct bonus {
-	bool active;
-	std::string type; 
+// Composants spécifiques
+struct Ball {
+    bool isMain; 
 };
 
-struct texture
-{
-	char* texture;
+struct Brick {
+    int health;
+};
+
+struct Bonus {
+    std::string type; 
+    bool active;      
+};
+
+struct Racket {
+    float speed;
+};
+
+struct RenderShape {
+    std::shared_ptr<sf::Shape> shape;
 };
