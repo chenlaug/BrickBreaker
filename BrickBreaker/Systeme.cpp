@@ -85,11 +85,10 @@ void Systeme::createBonus(EntityId brickId) {
 	size* brickSize = ecsManager.getComponent<size>(brickId);
 
 	if (brickPos && brickSize) {
-		// Créer un nouvel objet bonus
 		EntityId bonusEntity = ecsManager.createEntity();
 		ecsManager.addComponent<position>(bonusEntity, { brickPos->posX + brickSize->width / 2 - 10.0f, brickPos->posY });
-		ecsManager.addComponent<size>(bonusEntity, { 20.0f, 20.0f }); // Taille du bonus
-		ecsManager.addComponent<velocity>(bonusEntity, { 0.0f, 150.0f }); // Vitesse vers le bas
+		ecsManager.addComponent<size>(bonusEntity, { 20.0f, 20.0f }); 
+		ecsManager.addComponent<velocity>(bonusEntity, { 0.0f, 150.0f }); 
 		ecsManager.addComponent<color>(bonusEntity, { 255, 255, 0, 255 }); // Couleur jaune
 	}
 }
@@ -347,7 +346,6 @@ void Systeme::checkBallRacketCollision()
 	size* racketSize = ecsManager.getComponent<size>(racket);
 
 	if (ballPos && ballSize && ballVelo && racketPos && racketSize) {
-		// Vérification de collision
 		bool collisionX = ballPos->posX + ballSize->width > racketPos->posX &&
 			ballPos->posX < racketPos->posX + racketSize->width;
 
@@ -355,7 +353,7 @@ void Systeme::checkBallRacketCollision()
 			ballPos->posY < racketPos->posY + racketSize->height;
 
 		if (collisionX && collisionY) {
-			ballVelo->veloY = -std::abs(ballVelo->veloY); // Rebondir vers le haut
+			ballVelo->veloY = -std::abs(ballVelo->veloY); 
 		}
 	}
 }
