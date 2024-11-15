@@ -29,6 +29,7 @@ void ECSManager::nameEntity(const std::string& name, EntityId entity)
     namedEntities[name] = entity;
 }
 
+// Supprime toutes les entités et leurs composants
 void ECSManager::clearEntities(){
 	for (auto entity : entities) {
 		destroyEntity(entity);

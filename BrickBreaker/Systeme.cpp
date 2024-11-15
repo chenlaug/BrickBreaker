@@ -518,6 +518,8 @@ void Systeme::updateBrickColor(EntityId brick) {
 	renderShape->shape->setFillColor(newColor);
 }
 
+
+// fonction pour reinitialiser le jeu
 void Systeme::resetGame() {
 	setLifePoint(3);
 	std::cout << "Game reset!" << std::endl;
