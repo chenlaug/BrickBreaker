@@ -11,7 +11,7 @@ Event::Event(Window* window, Systeme* systeme) : event()
 }
 
 // Cette fonction permet de gérer les événements de la fenêtre
-void Event::handleEvent(float deltaTime)
+void Event::handleEvent(float deltaTime, GameState& currentState)
 {
 	while (window->pollEvent(event))
 	{
@@ -23,7 +23,9 @@ void Event::handleEvent(float deltaTime)
 		case sf::Event::KeyPressed:
 			switch (event.key.code) {
 			case sf::Keyboard::Escape:
-				window->close();
+				if (currentState == GameState::Playing) {
+					currentState = GameState::Menu; // Retourner au menu
+				}
 				break;
 
                 
@@ -37,7 +39,7 @@ void Event::handleEvent(float deltaTime)
 
 			case sf::Keyboard::Space:
 			case sf::Keyboard::Up:
-			case sf::Keyboard::Enter:
+			/*case sf::Keyboard::Enter:*/
 				systeme->launchBallMain();
 				break;
 
