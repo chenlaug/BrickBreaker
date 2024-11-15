@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Window/Event.hpp>
 #include "Window.h"
+#include "GameState.h"
 
 class Event
 {
@@ -13,6 +14,6 @@ private:
 
 public:
 	Event(Window* window, Systeme* systeme);
-	void handleEvent(float deltaTime);
+	void handleEvent(float deltaTime, GameState& currentState);
 };
 

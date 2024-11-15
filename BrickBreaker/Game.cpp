@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Component.h"
+#include "Menu.h"
 #include <iostream>
 #include <ctime>
 
@@ -30,24 +31,65 @@ void Game::functionality(float deltaTime) {
 	systeme.checkBallRacketCollision();
 }
 
-// Cette fonction est la boucle principale du jeu
-void Game::run()
-{
-	init();
-	while (window.isOpen()) {
-		event.handleEvent(fpsConter.getDeltaTime());
-		functionality(fpsConter.getDeltaTime());
-		fpsConter.update();
-		window.clear();
-		window.drawBackground();
+void Game::run() {
+    init();
 
-		for (auto e : ecsManager.getEntities()) {
-			systeme.renderEntity(e, window.getRenderWindow());
-		}
+    // Ajoutez une instance du menu
+    Menu menu(window);
+    menu.init();
+    GameState currentState = GameState::Menu;
 
+    while (window.isOpen()) {
+        switch (currentState) {
+        case GameState::Menu: {
+            // Gestion des événements via le menu
+            menu.handleInput();
+            menu.display();
 
-		window.draw(fpsConter.getText());
-		window.display();
-	}
+            // Gestion de la sélection dans le menu
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+                int selectedOption = menu.getSelectedOption();
+                if (selectedOption == 0) {
+                    currentState = GameState::Playing; // Démarrer le jeu
+                }
+                else if (selectedOption == 1) {
+                    currentState = GameState::Options; // Aller dans les options
+                }
+                else if (selectedOption == 2) {
+                    window.close(); // Quitter
+                }
+            }
+            break;
+        }
+
+        case GameState::Playing: {
+            // Gestion des événements dans l'état de jeu
+            event.handleEvent(fpsConter.getDeltaTime(), currentState);
+            functionality(fpsConter.getDeltaTime());
+            fpsConter.update();
+
+            // Rendu du jeu
+            window.clear();
+            window.drawBackground();
+
+            for (auto e : ecsManager.getEntities()) {
+                systeme.renderEntity(e, window.getRenderWindow());
+            }
+
+            window.draw(fpsConter.getText());
+            window.display();
+            break;
+        }
+
+        case GameState::Options: {
+            // Afficher les options
+            std::cout << "Options en construction..." << std::endl;
+
+            // Retour au menu pour l'instant
+            currentState = GameState::Menu;
+            break;
+        }
+        }
+    }
 }
 
