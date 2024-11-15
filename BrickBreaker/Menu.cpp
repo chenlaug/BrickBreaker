@@ -1,25 +1,39 @@
 #include "Menu.h"
 #include <iostream>
 
-Menu::Menu(Window& win) : window(win) {}
+Menu::Menu(Window& win, Systeme& sys) : window(win), systeme(sys) {}
 
 void Menu::init() {
     if (!font.loadFromFile("../Resource/Font/Roboto-Medium.ttf")) {
         throw std::runtime_error("Impossible de charger la police de caractères.");
     }
 
+	std::cout << "Life Point: " << systeme.getLifePoint() << std::endl;
+	if (systeme.getLifePoint() == 0) {
+        // Option Game Over
+        title.setString("Game Over");
+
+        // Option Restart
+        startOption.setString("Restart");
+	}
+	else {
+        // Option Menu
+        title.setString("Brick Breaker");
+
+        // Option Start
+        startOption.setString("Start");
+	}
+
     // Titre
     title.setFont(font);
-    title.setString("Brick Breaker");
     title.setCharacterSize(48);
     title.setFillColor(sf::Color::White);
     title.setPosition(window.getSize().x / 2 - title.getGlobalBounds().width / 2, 50);
 
-    // Option Start
+	// Option Start ou Restart
     startOption.setFont(font);
-    startOption.setString("Start");
     startOption.setCharacterSize(32);
-    startOption.setFillColor(sf::Color::Red); // Option sélectionnée par défaut
+    startOption.setFillColor(sf::Color::Red);
     startOption.setPosition(window.getSize().x / 2 - startOption.getGlobalBounds().width / 2, 200);
 
     // Option Options
@@ -65,7 +79,7 @@ void Menu::handleInput() {
 
 
 int Menu::getSelectedOption() const {
-    return selectedOption; // 0: Start, 1: Options, 2: Exit
+    return selectedOption;
 }
 
 void Menu::display() {

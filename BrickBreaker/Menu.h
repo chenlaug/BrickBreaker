@@ -2,10 +2,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Clock.hpp>
 #include "Window.h"
+#include "Systeme.h"
 
 class Menu {
 private:
     Window& window;
+	Systeme& systeme;
     sf::Font font;
     sf::Text title;
     sf::Text startOption;
@@ -17,7 +19,7 @@ private:
     int selectedOption = 0;
 
 public:
-    Menu(Window& win);
+    Menu(Window& win, Systeme& sys);
     ~Menu() = default;
 
     void init();

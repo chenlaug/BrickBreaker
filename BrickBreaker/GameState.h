@@ -5,6 +5,7 @@
 enum class GameState {
     Menu,      // Menu principal
     Playing,   // Jeu en cours
+	Restart,   // Redémarrer le jeu
     Options,   // Options
     Quit       // Quitter le jeu
 };

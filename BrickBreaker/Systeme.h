@@ -45,4 +45,5 @@ public:
 	void limitBallSpeed(EntityId ball, float maxSpeed);
 	void updateBrickColor(EntityId brick);
 	void resetGame();
+	void setLifePoint(int lifePoint);
 };

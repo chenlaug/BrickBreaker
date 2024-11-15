@@ -519,8 +519,15 @@ void Systeme::updateBrickColor(EntityId brick) {
 }
 
 void Systeme::resetGame() {
-	this->lifePoint = 3;
+	setLifePoint(3);
+	std::cout << "Game reset!" << std::endl;
+	std::cout << "Life points: " << this->lifePoint << std::endl;
 	ecsManager.clearEntities();
 	createEntity();
 	ballAttachedToRacket = true;
+}
+
+void Systeme::setLifePoint(int lifePoint)
+{
+	this->lifePoint = lifePoint;
 }

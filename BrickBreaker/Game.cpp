@@ -35,7 +35,7 @@ void Game::run() {
 	init();
 
 	// Ajoutez une instance du menu
-	Menu menu(window);
+	Menu menu(window, systeme);
 	menu.init();
 	GameState currentState = GameState::Menu;
 
@@ -49,7 +49,10 @@ void Game::run() {
 			// Gestion de la sélection dans le menu
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
 				int selectedOption = menu.getSelectedOption();
-				if (selectedOption == 0) {
+				if (selectedOption == 0 && systeme.getLifePoint() == 0) {
+					currentState = GameState::Restart; // Restart le jeu
+				}
+				else if (selectedOption == 0) {
 					currentState = GameState::Playing; // Démarrer le jeu
 				}
 				else if (selectedOption == 1) {
@@ -83,10 +86,15 @@ void Game::run() {
 
 			if (systeme.getLifePoint() == 0)
 			{
-				systeme.resetGame();
+				menu.init();
 				currentState = GameState::Menu;
 			}
+			break;
+		}
 
+		case GameState::Restart: {
+			systeme.resetGame();
+			currentState = GameState::Playing;
 			break;
 		}
 
@@ -98,8 +106,7 @@ void Game::run() {
 			currentState = GameState::Menu;
 			break;
 		}
-		}
 
+		}
 	}
 }
-
