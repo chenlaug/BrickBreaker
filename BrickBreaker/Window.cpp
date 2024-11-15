@@ -10,7 +10,7 @@ Window::Window(int width, int height, std::string title)
 	this->title = title;
 	window.create(sf::VideoMode(width, height), title, sf::Style::Default);
 
-    if (!loadBackground("../Resource/image/test.jpg")) {
+    if (!loadBackground("../Resource/image/test2.jpg")) {
         std::cerr << "Warning: Background not loaded. Using default clear color." << std::endl;
     }
 }
