@@ -29,6 +29,15 @@ void ECSManager::nameEntity(const std::string& name, EntityId entity)
     namedEntities[name] = entity;
 }
 
+void ECSManager::clearEntities(){
+	for (auto entity : entities) {
+		destroyEntity(entity);
+	}
+	entities.clear();
+	namedEntities.clear();
+	components.clear();
+}
+
 // Retourne l'entité avec le nom donné
 EntityId ECSManager::getEntityByName(const std::string& name) const
 {
@@ -44,4 +53,5 @@ EntityId ECSManager::getEntityByName(const std::string& name) const
 const std::vector<EntityId>& ECSManager::getEntities() const {
     return entities;
 }
+
 

@@ -12,6 +12,11 @@ void FPSConter::init(const std::string& fontPath)
     text.setCharacterSize(20);
     text.setFillColor(sf::Color::White);
     text.setPosition(10, 10);
+
+	textLife.setFont(font);
+	textLife.setCharacterSize(20);
+	textLife.setFillColor(sf::Color::White);
+	textLife.setPosition(10, 40);
 }
 
 // Mise à jour des FPS et du deltaTime
@@ -32,6 +37,14 @@ void FPSConter::update()
     text.setString("FPS: " + std::to_string(static_cast<int>(fps)));
 }
 
+// Mise à jour de la vie
+void FPSConter::updateLife(int life)
+{
+    textLife.setString("Life: " + std::to_string(life));
+}
+
+
+
 // Retourne les FPS actuels
 float FPSConter::getFps() const
 {
@@ -48,4 +61,9 @@ float FPSConter::getDeltaTime() const
 const sf::Text& FPSConter::getText() const
 {
     return text;
+}
+// Retourne l'objet texte pour l'affichagep
+const sf::Text& FPSConter::getTextLife() const
+{
+    return textLife;
 }

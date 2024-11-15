@@ -18,6 +18,7 @@ public:
 
 	// Initialisation des entités
 	void createEntity();
+	int lifePoint = 3;
 
 
 	// Logique du jeu
@@ -28,6 +29,9 @@ public:
 	void checkBallRacketCollision();
 	void checkBonusCollision();
 	void checkBonusRacketCollision();
+	int getLifePoint();
+	void loseLife();
+
 
 	// Rendu
 	void renderEntity(EntityId entity, sf::RenderWindow& renderWindow);
@@ -40,4 +44,5 @@ public:
 	void applyBonus(Bonus* bonusComp, EntityId entity);
 	void limitBallSpeed(EntityId ball, float maxSpeed);
 	void updateBrickColor(EntityId brick);
+	void resetGame();
 };

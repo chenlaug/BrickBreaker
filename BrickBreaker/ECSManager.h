@@ -21,6 +21,8 @@ public:
 	EntityId createEntity();
 	void destroyEntity(EntityId entity);
 	void nameEntity(const std::string& name, EntityId entity);
+	void clearEntities();
+
 	EntityId getEntityByName(const std::string& name) const;
 	const std::vector<EntityId>& getEntities() const;
 

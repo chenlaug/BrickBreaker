@@ -24,72 +24,82 @@ void Game::init()
 // Cette fonction gère la logique du jeu
 void Game::functionality(float deltaTime) {
 	systeme.moveBallMain(deltaTime);
-	systeme.moveBallBonus(deltaTime); 
-	systeme.moveBonuses(deltaTime); 
+	systeme.moveBallBonus(deltaTime);
+	systeme.moveBonuses(deltaTime);
 	systeme.checkBonusCollision();
 	systeme.checkBallBrickCollision();
 	systeme.checkBallRacketCollision();
 }
 
 void Game::run() {
-    init();
+	init();
 
-    // Ajoutez une instance du menu
-    Menu menu(window);
-    menu.init();
-    GameState currentState = GameState::Menu;
+	// Ajoutez une instance du menu
+	Menu menu(window);
+	menu.init();
+	GameState currentState = GameState::Menu;
 
-    while (window.isOpen()) {
-        switch (currentState) {
-        case GameState::Menu: {
-            // Gestion des événements via le menu
-            menu.handleInput();
-            menu.display();
+	while (window.isOpen()) {
+		switch (currentState) {
+		case GameState::Menu: {
+			// Gestion des événements via le menu
+			menu.handleInput();
+			menu.display();
 
-            // Gestion de la sélection dans le menu
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-                int selectedOption = menu.getSelectedOption();
-                if (selectedOption == 0) {
-                    currentState = GameState::Playing; // Démarrer le jeu
-                }
-                else if (selectedOption == 1) {
-                    currentState = GameState::Options; // Aller dans les options
-                }
-                else if (selectedOption == 2) {
-                    window.close(); // Quitter
-                }
-            }
-            break;
-        }
+			// Gestion de la sélection dans le menu
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+				int selectedOption = menu.getSelectedOption();
+				if (selectedOption == 0) {
+					currentState = GameState::Playing; // Démarrer le jeu
+				}
+				else if (selectedOption == 1) {
+					currentState = GameState::Options; // Aller dans les options
+				}
+				else if (selectedOption == 2) {
+					window.close(); // Quitter
+				}
+			}
+			break;
+		}
 
-        case GameState::Playing: {
-            // Gestion des événements dans l'état de jeu
-            event.handleEvent(fpsConter.getDeltaTime(), currentState);
-            functionality(fpsConter.getDeltaTime());
-            fpsConter.update();
+		case GameState::Playing: {
+			// Gestion des événements dans l'état de jeu
+			event.handleEvent(fpsConter.getDeltaTime(), currentState);
+			functionality(fpsConter.getDeltaTime());
+			fpsConter.update();
+			fpsConter.updateLife(systeme.getLifePoint());
 
-            // Rendu du jeu
-            window.clear();
-            window.drawBackground();
+			// Rendu du jeu
+			window.clear();
+			window.drawBackground();
 
-            for (auto e : ecsManager.getEntities()) {
-                systeme.renderEntity(e, window.getRenderWindow());
-            }
+			for (auto e : ecsManager.getEntities()) {
+				systeme.renderEntity(e, window.getRenderWindow());
+			}
 
-            window.draw(fpsConter.getText());
-            window.display();
-            break;
-        }
+			window.draw(fpsConter.getTextLife());
+			window.draw(fpsConter.getText());
+			window.display();
 
-        case GameState::Options: {
-            // Afficher les options
-            std::cout << "Options en construction..." << std::endl;
+			if (systeme.getLifePoint() == 0)
+			{
+				systeme.resetGame();
+				currentState = GameState::Menu;
+			}
 
-            // Retour au menu pour l'instant
-            currentState = GameState::Menu;
-            break;
-        }
-        }
-    }
+			break;
+		}
+
+		case GameState::Options: {
+			// Afficher les options
+			std::cout << "Options en construction..." << std::endl;
+
+			// Retour au menu pour l'instant
+			currentState = GameState::Menu;
+			break;
+		}
+		}
+
+	}
 }
 

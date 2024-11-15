@@ -107,6 +107,7 @@ void Systeme::moveBallMain(float deltaTime) {
 		}
 
 		if (ballPos->y > windowHeight) {
+			loseLife();
 			std::cout << "Ball missed! Resetting ball to racket." << std::endl;
 			ballAttachedToRacket = true;
 			ballVelo->x = 0.0f;
@@ -353,6 +354,17 @@ void Systeme::checkBonusRacketCollision() {
 	}
 }
 
+int Systeme::getLifePoint()
+{
+	return this->lifePoint;	
+}
+
+void Systeme::loseLife()
+{
+	std::cout << "Life lost!" << std::endl;
+	this->lifePoint--;
+}
+
 // fonction pour rendre les entites
 void Systeme::renderEntity(EntityId entity, sf::RenderWindow& renderWindow) {
 	auto shape = ecsManager.getComponent<RenderShape>(entity);
@@ -506,6 +518,9 @@ void Systeme::updateBrickColor(EntityId brick) {
 	renderShape->shape->setFillColor(newColor);
 }
 
-
-
-
+void Systeme::resetGame() {
+	this->lifePoint = 3;
+	ecsManager.clearEntities();
+	createEntity();
+	ballAttachedToRacket = true;
+}
