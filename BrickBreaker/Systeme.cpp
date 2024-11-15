@@ -54,7 +54,7 @@ void Systeme::createEntity() {
 			int health = 1 + rand() % 3;
 			ecsManager.addComponent<Brick>(brick, { health });
 
-			if (rand() % 5 == 0) {
+			if (rand() % 2 == 0) {
 				std::string bonusType = (rand() % 2 == 0) ? "extra_ball" : "big_racket";
 				ecsManager.addComponent<Bonus>(brick, { bonusType, true });
 			}
@@ -67,7 +67,6 @@ void Systeme::createEntity() {
 
 		}
 	}
-
 }
 
 // Fonction pour deplace la balle principale
@@ -386,12 +385,15 @@ void Systeme::moveRacketLeft(float deltaTime) {
 	auto racket = ecsManager.getEntityByName("racket");
 	auto pos = ecsManager.getComponent<Position>(racket);
 	auto velo = ecsManager.getComponent<Racket>(racket);
+	auto size = ecsManager.getComponent<Size>(racket);
 	auto shape = ecsManager.getComponent<RenderShape>(racket);
 
-	if (pos && velo && shape) {
+	if (pos && velo && size && shape) {
 		pos->x -= velo->speed * deltaTime;
 
-		if (pos->x < 0) pos->x = 0;
+		if (pos->x < 0) {
+			pos->x = 0;
+		}
 
 		shape->shape->setPosition(pos->x, pos->y);
 	}
@@ -402,12 +404,15 @@ void Systeme::moveRacketRight(float deltaTime) {
 	auto racket = ecsManager.getEntityByName("racket");
 	auto pos = ecsManager.getComponent<Position>(racket);
 	auto velo = ecsManager.getComponent<Racket>(racket);
+	auto size = ecsManager.getComponent<Size>(racket);
 	auto shape = ecsManager.getComponent<RenderShape>(racket);
 
-	if (pos && velo && shape) {
+	if (pos && velo && size && shape) {
 		pos->x += velo->speed * deltaTime;
 
-		if (pos->x + 100.0f > window.getSize().x) pos->x = window.getSize().x - 100.0f;
+		if (pos->x + size->width > window.getSize().x) {
+			pos->x = window.getSize().x - size->width;
+		}
 
 		shape->shape->setPosition(pos->x, pos->y);
 	}

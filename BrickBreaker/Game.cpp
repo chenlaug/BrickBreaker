@@ -1,9 +1,12 @@
 #include "Game.h"
 #include "Component.h"
 #include <iostream>
+#include <ctime>
 
 // constructeur de la classe Game
-Game::Game() : window(800, 600, "Brick Breaker"), event(&window, &systeme), systeme(ecsManager, window) {}
+Game::Game() : window(800, 600, "Brick Breaker"), event(&window, &systeme), systeme(ecsManager, window) {
+	srand(static_cast<unsigned int>(time(0)));
+}
 
 // destructeur de la classe Game
 Game::~Game() {
